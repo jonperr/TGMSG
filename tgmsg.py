@@ -489,4 +489,101 @@ async def config_menu(config):
                     await asyncio.sleep(2)
                     continue
                 config["delay_variation"] = new_variation
-              
+              print(f"✅ Variação definida para {new_variation}s")
+                save_config(config)
+                await asyncio.sleep(2)
+            except ValueError:
+                print("❌ Valor inválido. Deve ser um número.")
+                await asyncio.sleep(2)
+        else:
+            print("❌ Opção inválida. Tente novamente.")
+            await asyncio.sleep(1)
+
+async def logout_menu(client, config):
+    """Menu de logout"""
+    clear_screen()
+    show_menu_banner()
+    try:
+        me = await client.get_me()
+        phone = f"+{me.phone}" if me and me.phone else "Número não disponível"
+        print("🚪 Logout")
+        print(f"📱 Número atual: {phone}")
+        print("")
+        print("⚠️  Ao fazer logout, sua sessão será apagada")
+        print("   e você precisará fazer login novamente.")
+        print("")
+        confirm = input("❓ Deseja realmente fazer logout? (s/n): ").strip().lower()
+        if confirm == 's':
+            if delete_session():
+                print("✅ Logout realizado com sucesso!")
+                print("👋 Até mais!")
+                return True
+            else:
+                print("❌ Erro ao fazer logout. Sessão não encontrada.")
+                await asyncio.sleep(2)
+        else:
+            print("↩️  Voltando ao menu...")
+            await asyncio.sleep(1)
+    except Exception as e:
+        print(f"❌ Erro ao obter informações da conta: {e}")
+        await asyncio.sleep(2)
+    return False
+
+async def main_menu(client):
+    """Menu principal do TGMSG"""
+    config = load_config()
+    while True:
+        clear_screen()
+        show_menu_banner()
+        print("📋 Opções disponíveis:")
+        print("   1. 📤 Exportar mensagens de grupo")
+        print("   2. ⚙️ Configurações")
+        print("   3. 🚪 Logout")
+        print("")
+        print("💡 Dica: Digite 'menu' ou 'voltar' a qualquer momento para voltar")
+        print("")
+        option = input("💡 Escolha uma opção: ").strip().lower()
+        if option == '1':
+            group_entity, topic_id, limit = await export_chat(client, config)
+            if group_entity is None:
+                continue
+            print("\n⏳ Coletando mensagens...")
+            messages = await collect_messages(client, group_entity, topic_id, limit, config)
+            success = await save_and_send_files(client, group_entity, topic_id, messages)
+            if success:
+                print("🎉 Processo concluído! As mensagens já estão no seu Telegram em Mensagens Salvas.")
+            else:
+                print("❌ O processo não foi concluído com sucesso.")
+            input("\n📝 Pressione Enter para continuar...")
+        elif option == '2':
+            config = await config_menu(config)
+        elif option == '3':
+            if await logout_menu(client, config):
+                return True
+        else:
+            print("❌ Opção inválida. Tente novamente.")
+            await asyncio.sleep(1)
+
+async def main():
+    """Função principal"""
+    client = None
+    try:
+        client = await setup_client()
+        if client is None:
+            return
+        should_logout = await main_menu(client)
+        if should_logout:
+            return
+    except Exception as e:
+        print(f"\n❌ Erro inesperado: {e}")
+        input("Pressione Enter para continuar...")
+    finally:
+        if client:
+            await client.disconnect()
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\n\n❌ Operação cancelada pelo usuário.")
+        print("👋 Até mais!")
