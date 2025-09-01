@@ -51,11 +51,11 @@ python tgmsg.py
 
 . Siga as instruções na tela para:
 
-. Obter suas credenciais API (instruções abaixo)
-. Fazer login na sua conta Telegram
-. Formato do número correto: +5511XXXXXXXXX (11 sendo seu ddd)
-. Selecionar o grupo para exportar
-. Escolher as opções de exportação
+1. Obter suas credenciais API (instruções abaixo)
+2. Fazer login na sua conta Telegram
+3. Formato do número correto: +5511XXXXXXXXX (11 sendo seu ddd)
+4. Selecionar o grupo para exportar
+5. Escolher as opções de exportação
 
 🔑 Como obter API ID e API Hash
 
