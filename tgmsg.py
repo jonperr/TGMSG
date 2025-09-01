@@ -57,47 +57,52 @@ def load_credentials():
 def delete_credentials():
     """Remove as credenciais salvas"""
     try:
-        os.remove("tgmsg_config.json")
-        os.remove("user_session.session")
+        if os.path.exists("tgmsg_config.json"):
+            os.remove("tgmsg_config.json")
+        if os.path.exists("user_session.session"):
+            os.remove("user_session.session")
         return True
-    except FileNotFoundError:
+    except:
+        return False
+
+async def check_session_validity(client):
+    """Verifica se a sessão é válida"""
+    try:
+        me = await client.get_me()
+        return me is not None
+    except:
         return False
 
 async def setup_client():
     """Configura o cliente do Telegram com sessão persistente"""
-    # Verifica se já existem credenciais salvas
-    credentials = load_credentials()
-    
-    if credentials:
-        clear_screen()
-        print("✅ Sessão encontrada! Reconectando...")
-        print("📝 Se quiser fazer login com outra conta, digite 'sair'")
-        
+    # Primeiro tenta usar a sessão existente
+    if os.path.exists("user_session.session"):
         try:
-            client = TelegramClient("user_session", credentials["api_id"], credentials["api_hash"])
-            await client.start()
+            # Tenta carregar credenciais salvas
+            credentials = load_credentials()
             
-            # Verifica se a sessão é válida
-            me = await client.get_me()
-            if me:
-                clear_screen()
-                print(f"✅ Conectado como: {me.first_name}")
-                if me.username:
-                    print(f"📱 Usuário: @{me.username}")
-                sleep(2)
+            if credentials:
+                client = TelegramClient("user_session", credentials["api_id"], credentials["api_hash"])
+                await client.start()
                 
-                clear_screen()
-                show_welcome_banner()
-                return client
-                
-        except Exception as e:
-            print(f"❌ Erro ao conectar: {e}")
-            print("🔐 Será necessário fazer login novamente")
-            sleep(2)
-            if delete_credentials():
-                print("🗑️ Credenciais antigas removidas")
+                # Verifica se a sessão é válida
+                if await check_session_validity(client):
+                    me = await client.get_me()
+                    clear_screen()
+                    print("✅ Sessão restaurada com sucesso!")
+                    print(f"👤 Conectado como: {me.first_name}")
+                    if me.username:
+                        print(f"📱 Usuário: @{me.username}")
+                    sleep(2)
+                    
+                    clear_screen()
+                    show_welcome_banner()
+                    return client
+        except:
+            # Se falhar, continua para o login normal
+            pass
     
-    # Se não tem credenciais ou falhou, faz login novo
+    # Se não tem sessão válida, faz login normal
     clear_screen()
     show_login_banner()
     
@@ -448,14 +453,6 @@ async def main(client):
     
     print("\n👋 Obrigado por usar o TGMSG! Até a próxima!")
     print("⭐ Se gostou, compartilhe com seus amigos!")
-    
-    # Pergunta se deseja manter a sessão
-    manter_sessao = input("\n💾 Deseja manter sua sessão para próximos usos? (s/n): ").strip().lower()
-    if manter_sessao != 's':
-        if delete_credentials():
-            print("🗑️ Sessão removida. Você precisará fazer login novamente na próxima vez.")
-        else:
-            print("ℹ️ Nenhuma sessão encontrada para remover.")
 
 if __name__ == "__main__":
     try:
