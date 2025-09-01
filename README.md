@@ -33,6 +33,7 @@ pkg install python
 
 ```bash
 pip install telethon
+pkg install git
 ```
 
 1. Baixe o TGMSG:
