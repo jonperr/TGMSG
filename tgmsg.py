@@ -713,14 +713,8 @@ async def main():
 
 if __name__ == "__main__":
     try:
-        # Corrige o aviso de depreciação usando asyncio.run()
-        if hasattr(asyncio, 'run'):
-            asyncio.run(main())
-        else:
-            # Para versões mais antigas do Python
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            loop.run_until_complete(main())
+        # Usa asyncio.run() que é a maneira moderna de executar async code
+        asyncio.run(main())
     except KeyboardInterrupt:
         print("\n\n❌ Operação cancelada pelo usuário.")
-        print("👋 Até mais!")
+        print("👋 Até mais")
