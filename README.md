@@ -24,30 +24,30 @@ Siga estes passos para usar o TGMSG:
 1. **Abra o Termux** no seu dispositivo Android  
 
 2. **Atualize os pacotes** e instale o Python:  
-```bash
+```
 pkg update
 pkg install python
-
+```
 3. Instale as bibliotecas necessárias:
 
 
-
+```
 pkg install git
 pip install telethon
-
+```
 4. Baixe o TGMSG:
 
 
-
+```
 git clone https://github.com/jonperr/tgmsg.git
 cd tgmsg
-
+```
 5. Execute o script:
 
 
-
+```
 python tgmsg.py
-
+```
 6. Siga as instruções na tela para:
 
 Obter suas credenciais API (instruções abaixo)
@@ -63,7 +63,7 @@ Escolher as opções de exportação
 
 
 
-🔑 Como obter API ID e API Hash
+## 🔑 Como obter API ID e API Hash
 
 O TGMSG precisa destas credenciais para acessar a API do Telegram:
 
@@ -80,3 +80,5 @@ O TGMSG precisa destas credenciais para acessar a API do Telegram:
 
 
 5. Anote o API ID e API Hash gerados
+
+— IA
