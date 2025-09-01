@@ -17,7 +17,7 @@ Um script Python que exporta mensagens de grupos e tópicos do Telegram para arq
 - Conta no Telegram
 - Conexão com internet
 
-## 🚀 Instalação e Uso
+## 🚀 Instalação e Uso, LEIA COM ATENÇÃO!
 
 Siga estes passos para usar o TGMSG:
 
@@ -52,6 +52,7 @@ python tgmsg.py
 1. Siga as instruções na tela para:
    · Obter suas credenciais API (veja instruções abaixo)
    · Fazer login na sua conta Telegram
+   · Formato do número precisa ser: +5511XXXXXXXXX (11 sendo seu ddd)
    · Selecionar o grupo para exportar
    · Escolher as opções de exportação
 
@@ -88,3 +89,6 @@ Não consegue acessar o grupo
 
 · Verifique se você é membro do grupo
 · Certifique-se de que o link está correto
+
+
+- IA
