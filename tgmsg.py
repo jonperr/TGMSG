@@ -540,8 +540,8 @@ async def config_menu(config):
             print("📊 Limite máximo de mensagens")
             print("💡 Deixe em branco para exportar todas as mensagens")
             print("")
-            try:
-           new_limit = input("🔢 Novo limite: ").strip()
+            try 
+            new_limit = input("🔢 Novo limite: ").strip()
                 if new_limit == '':
                     config["max_messages"] = None
                     print("✅ Limite removido - serão exportadas todas as mensagens")
@@ -717,4 +717,4 @@ if __name__ == "__main__":
         asyncio.run(main())
     except KeyboardInterrupt:
         print("\n\n❌ Operação cancelada pelo usuário.")
-        print("👋 Até mais")
+        print("👋 Até mais!") 
