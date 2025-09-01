@@ -1,95 +1,82 @@
 # 🔐 TGMSG - Exportador de Mensagens do Telegram
 
-Um script Python que exporta mensagens de grupos e tópicos do Telegram para arquivos TXT/CSV e envia para suas Mensagens Salvas.
+Um script Python que exporta mensagens de **grupos e canais** do Telegram para arquivos **TXT/CSV** e envia automaticamente para suas **Mensagens Salvas**.
 
 ## ✨ Funcionalidades
 
-- 📥 Exporta mensagens de grupos e tópicos do Telegram
-- 💾 Salva em formatos TXT e CSV
-- 📤 Envia automaticamente para suas Mensagens Salvas
-- 🎯 Interface amigável com menus interativos
-- ⚡ Barra de progresso durante a exportação
-- 🔐 Sistema de login seguro com suas credenciais
+- 📥 Exporta mensagens de grupos e canais do Telegram  
+- 💾 Salva em formatos TXT e CSV  
+- 📤 Envia automaticamente para suas Mensagens Salvas  
+- 🎯 Interface amigável com menus interativos  
+- ⚡ Barra de progresso durante a exportação  
+- 🔐 Sistema de login seguro com suas credenciais  
 
 ## 📋 Pré-requisitos
 
-- Dispositivo Android com Termux.
-- Conta no Telegram
-- Conexão com internet
+- Dispositivo Android com Termux  
+- Conta no Telegram  
+- Conexão com internet  
 
-## 🚀 Instalação e Uso, LEIA COM ATENÇÃO!
+## 🚀 Instalação e Uso (LEIA COM ATENÇÃO)
 
 Siga estes passos para usar o TGMSG:
 
-1. **Abra o Termux** no seu dispositivo Android
+1. **Abra o Termux** no seu dispositivo Android  
 
-2. **Atualize os pacotes** e instale o Python:
+2. **Atualize os pacotes** e instale o Python:  
 ```bash
 pkg update
 pkg install python
-```
 
-1. Instale a biblioteca necessária:
+3. Instale as bibliotecas necessárias:
 
-```bash
-pip install telethon
+
+
 pkg install git
-```
+pip install telethon
 
-1. Baixe o TGMSG:
+4. Baixe o TGMSG:
 
-```bash
+
+
 git clone https://github.com/jonperr/tgmsg.git
 cd tgmsg
-```
 
-1. Execute o script:
+5. Execute o script:
 
-```bash
+
+
 python tgmsg.py
-```
 
-. Siga as instruções na tela para:
+6. Siga as instruções na tela para:
 
-1. Obter suas credenciais API (instruções abaixo)
-2. Fazer login na sua conta Telegram
-3. Formato do número correto: +5511XXXXXXXXX (11 sendo seu ddd)
-4. Selecionar o grupo para exportar
-5. Escolher as opções de exportação
+Obter suas credenciais API (instruções abaixo)
+
+Fazer login na sua conta do Telegram
+
+Inserir seu número no formato: +5511XXXXXXXXX (11 = seu DDD)
+
+Selecionar o grupo/canal para exportar
+
+Escolher as opções de exportação
+
+
+
 
 🔑 Como obter API ID e API Hash
 
 O TGMSG precisa destas credenciais para acessar a API do Telegram:
 
-1. Acesse https://my.telegram.org
+1. Acesse my.telegram.org
+
+
 2. Faça login com seu número do Telegram
-3. Vá em "API Development Tools"
+
+
+3. Vá em API Development Tools
+
+
 4. Preencha o formulário para criar um novo aplicativo
-5. Anote o "API ID" e "API Hash" gerados
-
-🆘 Troubleshooting
-
-Erro de permissão
-
-Se aparecer "Permission denied", execute:
-
-```bash
-chmod +x tgmsg.py
-```
-
-Erro de dependências
-
-Se houver problemas com o Telethon, reinstale:
-
-```bash
-pip uninstall telethon
-pip install telethon
-```
-
-Não consegue acessar o grupo
-
-· Verifique se você é membro do grupo
-· Certifique-se de que o link está correto
 
 
-- IA
+5. Anote o API ID e API Hash gerados
