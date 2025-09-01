@@ -85,10 +85,10 @@ def load_config():
 def delete_session():
     """Remove a sessão salva"""
     try:
-        if os.path.exists("user_session.session"):
-            os.remove("user_session.session")
-        if os.path.exists("tgmsg_config.json"):
-            os.remove("tgmsg_config.json")
+        session_files = ["user_session.session", "tgmsg_config.json"]
+        for file in session_files:
+            if os.path.exists(file):
+                os.remove(file)
         return True
     except:
         return False
@@ -541,7 +541,7 @@ async def config_menu(config):
             print("💡 Deixe em branco para exportar todas as mensagens")
             print("")
             try:
-                new_limit = input("🔢 Novo limite: ").strip()
+           new_limit = input("🔢 Novo limite: ").strip()
                 if new_limit == '':
                     config["max_messages"] = None
                     print("✅ Limite removido - serão exportadas todas as mensagens")
@@ -713,9 +713,14 @@ async def main():
 
 if __name__ == "__main__":
     try:
-        # Executa o programa principal
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(main())
+        # Corrige o aviso de depreciação usando asyncio.run()
+        if hasattr(asyncio, 'run'):
+            asyncio.run(main())
+        else:
+            # Para versões mais antigas do Python
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(main())
     except KeyboardInterrupt:
         print("\n\n❌ Operação cancelada pelo usuário.")
         print("👋 Até mais!")
