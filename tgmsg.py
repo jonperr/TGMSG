@@ -542,7 +542,7 @@ async def config_menu(config):
             clear_screen()
             show_config_banner()
             print("📊 Limite máximo de mensagens")
-                  print("")
+            print("")
         
         option = input("💡 Escolha uma opção: ").strip().lower()
         
