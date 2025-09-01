@@ -4,6 +4,7 @@ import asyncio
 import csv
 import os
 import sys
+import json
 from time import sleep
 
 def clear_screen():
@@ -33,10 +34,70 @@ def show_welcome_banner():
     print("📥 Extrai mensagens de grupos e tópicos")
     print("💾 Salva em formato TXT e CSV")
     print("📤 Envia para suas Mensagens Salvas")
+    print("🔐 Sessão persistente - Login uma vez apenas")
     print("─" * 50)
 
+def save_credentials(api_id, api_hash):
+    """Salva as credenciais em arquivo JSON"""
+    credentials = {
+        "api_id": api_id,
+        "api_hash": api_hash
+    }
+    with open("tgmsg_config.json", "w") as f:
+        json.dump(credentials, f)
+
+def load_credentials():
+    """Carrega as credenciais do arquivo JSON"""
+    try:
+        with open("tgmsg_config.json", "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+
+def delete_credentials():
+    """Remove as credenciais salvas"""
+    try:
+        os.remove("tgmsg_config.json")
+        os.remove("user_session.session")
+        return True
+    except FileNotFoundError:
+        return False
+
 async def setup_client():
-    """Configura o cliente do Telegram"""
+    """Configura o cliente do Telegram com sessão persistente"""
+    # Verifica se já existem credenciais salvas
+    credentials = load_credentials()
+    
+    if credentials:
+        clear_screen()
+        print("✅ Sessão encontrada! Reconectando...")
+        print("📝 Se quiser fazer login com outra conta, digite 'sair'")
+        
+        try:
+            client = TelegramClient("user_session", credentials["api_id"], credentials["api_hash"])
+            await client.start()
+            
+            # Verifica se a sessão é válida
+            me = await client.get_me()
+            if me:
+                clear_screen()
+                print(f"✅ Conectado como: {me.first_name}")
+                if me.username:
+                    print(f"📱 Usuário: @{me.username}")
+                sleep(2)
+                
+                clear_screen()
+                show_welcome_banner()
+                return client
+                
+        except Exception as e:
+            print(f"❌ Erro ao conectar: {e}")
+            print("🔐 Será necessário fazer login novamente")
+            sleep(2)
+            if delete_credentials():
+                print("🗑️ Credenciais antigas removidas")
+    
+    # Se não tem credenciais ou falhou, faz login novo
     clear_screen()
     show_login_banner()
     
@@ -47,7 +108,14 @@ async def setup_client():
     
     # Solicita credenciais API
     api_id = input("🔑 Digite seu API ID: ").strip()
+    if api_id.lower() == 'sair':
+        print("👋 Até mais!")
+        sys.exit(0)
+        
     api_hash = input("🔒 Digite seu API Hash: ").strip()
+    
+    # Salva as credenciais para uso futuro
+    save_credentials(int(api_id), api_hash)
     
     # Cria cliente com as credenciais fornecidas
     client = TelegramClient("user_session", int(api_id), api_hash)
@@ -58,8 +126,15 @@ async def setup_client():
     # Limpa a tela e mostra welcome message
     clear_screen()
     print("✅ Login realizado com sucesso!")
+    
+    # Mostra informações da conta
+    me = await client.get_me()
+    print(f"👤 Conectado como: {me.first_name}")
+    if me.username:
+        print(f"📱 Usuário: @{me.username}")
+    
     print("🔄 Iniciando TGMSG...")
-    sleep(2)
+    sleep(3)
     
     clear_screen()
     show_welcome_banner()
@@ -104,7 +179,7 @@ async def export_chat(client):
             print("📝 Verifique se:")
             print("   - O link está correto")
             print("   - Você é membro do grupo")
-            print("   - O grupo não é privado ou restrito")
+            print("   - O grupo não é restrito")
             return None, None, None
         
         # Verifica se o grupo tem tópicos (é um fórum)
@@ -143,7 +218,7 @@ async def export_chat(client):
         
         # Pergunta sobre o limite de mensagens
         try:
-            limit_input = input("\n🔢 Quantidade máxima de mensagens a exportar (deixe em branco para todas): ").strip()
+            limit_input = input("\n🔢 Quantidade máxima de mensagens a exportar (deixe em branco pra todas): ").strip()
             limit = int(limit_input) if limit_input else None
         except:
             print("❌ Valor inválido. Usando todas as mensagens.")
@@ -373,6 +448,14 @@ async def main(client):
     
     print("\n👋 Obrigado por usar o TGMSG! Até a próxima!")
     print("⭐ Se gostou, compartilhe com seus amigos!")
+    
+    # Pergunta se deseja manter a sessão
+    manter_sessao = input("\n💾 Deseja manter sua sessão para próximos usos? (s/n): ").strip().lower()
+    if manter_sessao != 's':
+        if delete_credentials():
+            print("🗑️ Sessão removida. Você precisará fazer login novamente na próxima vez.")
+        else:
+            print("ℹ️ Nenhuma sessão encontrada para remover.")
 
 if __name__ == "__main__":
     try:
